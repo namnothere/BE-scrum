@@ -2,9 +2,9 @@ import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/c
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { plainToClass } from 'class-transformer';
-import { User } from 'src/user/entities';
+import { User } from '../../user/entities';
 import { Repository } from 'typeorm';
 
 import { MESSAGES, RESULT_STATUS } from '../../shared/constants';

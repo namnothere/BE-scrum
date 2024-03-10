@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import type { Params } from 'nestjs-pino';
 import { multistream } from 'pino';
 import type { ReqId } from 'pino-http';
+import 'pino-pretty';
 
 const passUrl = new Set(['/health', '/graphql']);
 
