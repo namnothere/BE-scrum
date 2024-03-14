@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, Body } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body, Get } from '@nestjs/common';
 import { AuthService } from '../providers';
 import { LocalAuthGuard } from '../guards';
 import { AuthTokenOutput } from '../dtos';
@@ -20,5 +20,11 @@ export class AuthController {
   @Post('register')
   registerUser(@Body() input: RegisterInput): Promise<BaseApiResponse<any>> {
     return this.authService.registerUser(input);
+  }
+  
+  @Get('getInfo')
+  getUserInfo(@ReqContext() ctx: RequestContext): Promise<BaseApiResponse<any>> {
+    console.log(ctx);
+    return this.authService.getUserInfo(ctx.user.id);
   }
 }

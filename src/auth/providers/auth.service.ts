@@ -161,6 +161,22 @@ export class AuthService {
     };
   }
 
+  async getUserInfo(userId: string){
+    const userById = await this.userRepo.findOne({
+      where: {
+        id: userId
+      },
+    });
+
+    return {
+      status: RESULT_STATUS.SUCCEED,
+      error: false,
+      data: userById,
+      code: 0,
+      message: MESSAGES.OK,
+    };
+  }
+
   async findByToken(token: string): Promise<User> {
     const user = await this.userRepo.findOne({
       where: { token },
