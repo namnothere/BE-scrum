@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
+import { Expense } from '../../expense/entities';
 
 @Entity({ name: 'users', schema: process.env.DB_SCHEMA })
 export class User {
@@ -32,6 +33,9 @@ export class User {
 
   @Column({ nullable: true })
   token: string;
+
+  @OneToMany(() => Expense, (expense) => expense.user)
+  expenses: Expense[];
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);

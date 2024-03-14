@@ -14,4 +14,6 @@ export const MESSAGES = {
 
   USERNAME_ALREADY_EXIST: 'username already exist',
   NOT_FOUND_USER: 'not found user',
+
+  NOT_FOUND_EXPENSE: 'not found expense',
 };
