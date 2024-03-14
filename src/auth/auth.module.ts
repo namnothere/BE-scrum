@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Role, User } from '../user/entities';
+import { User } from '../user/entities';
 import * as controllers from './controllers';
 import * as providers from './providers';
 import * as strategies from './strategies';
@@ -24,7 +24,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([User, Role]),
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: Object.values(controllers),
   providers: [...Object.values(providers), ...Object.values(strategies)],

@@ -1,5 +1,4 @@
-import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
-import { Role } from './role.entity';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'users', schema: process.env.DB_SCHEMA })
 export class User {
@@ -19,8 +18,8 @@ export class User {
   @Column({ nullable: true })
   phone: string;
 
-  @ManyToMany(() => Role, (role) => role.users)
-  roles: Role[];
+  @Column('varchar', { default: 'USER' })
+  role: string;
 
   @Column({ nullable: true })
   gender: number;

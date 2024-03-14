@@ -57,7 +57,7 @@ export class AuthService {
   }
 
   public jwtSign(data: Payload): JwtSign {
-    const payload: JwtPayload = { sub: data.userId, username: data.username, roles: data.roles };
+    const payload: JwtPayload = { sub: data.userId, username: data.username, role: data.role };
 
     return {
       access_token: this.jwtService.sign(payload),
@@ -72,7 +72,7 @@ export class AuthService {
         return null;
       }
 
-      return { userId: payload.sub, username: payload.username, roles: payload.roles };
+      return { userId: payload.sub, username: payload.username, role: payload.role };
     } catch {
       // Unexpected token i in JSON at position XX
       return null;
@@ -94,8 +94,6 @@ export class AuthService {
       sub: user.id,
     };
 
-    console.log(this.configService.get('jwt.expiresIn'));
-
     const authToken = {
       refreshToken: this.jwtService.sign(subject, {
         expiresIn: this.configService.get('jwt.expiresIn'),
@@ -104,7 +102,7 @@ export class AuthService {
       user,
     };
 
-    await this.userRepo.update({ id: userId }, { token: authToken.token });
+    await this.userRepo.update({ id: user.id }, { token: authToken.token });
 
     const output = plainToClass(
       AuthTokenOutput,
@@ -161,5 +159,22 @@ export class AuthService {
       code: 0,
       message: MESSAGES.OK,
     };
+  }
+
+  async findByToken(token: string): Promise<User> {
+    const user = await this.userRepo.findOne({
+      where: { token },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    // try {
+    //   this.jwtService.verify(token);
+    // } catch (e) {
+    //   console.log(e);
+    //   throw new UnauthorizedException();
+    // }
+    return user;
   }
 }
