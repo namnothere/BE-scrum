@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateExpenseInput } from '../dtos/create-expense-input.dto';
+import { CreateExpenseInput } from '../dtos';
 import { Repository } from 'typeorm';
 import { User } from '../../user/entities';
 import { InjectRepository } from '@nestjs/typeorm';

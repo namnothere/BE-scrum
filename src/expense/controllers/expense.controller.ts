@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Param, Delete, UseGuards } from '@nestjs/common';
 import { ExpenseService } from '../providers/expense.service';
-import { CreateExpenseInput } from '../dtos/create-expense-input.dto';
+import { CreateExpenseInput } from '../dtos';
 import { ReqContext } from '../../shared/request-context/req-context.decorator';
 import { RequestContext } from '../../shared/request-context/request-context.dto';
 import { JwtAuthGuard } from '../../auth';
