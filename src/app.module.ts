@@ -10,6 +10,7 @@ import { BaseModule } from './base';
 import { CommonModule, ExceptionsFilter } from './common';
 import { configuration, loggerOptions } from './config';
 import { UserModule } from './user';
+import { ExpenseModule } from './expense';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { UserModule } from './user';
     CommonModule, // Global
     BaseModule,
     UserModule,
+    ExpenseModule,
     // Module Router
     // https://docs.nestjs.com/recipes/router-module
     // RouterModule.register([
