@@ -8,7 +8,7 @@ export class UserAccessTokenClaims {
   username: string;
 
   @Expose()
-  roles: string[];
+  role: string;
 }
 
 export class UserAccessTokenClaimsAdmin {
@@ -19,7 +19,7 @@ export class UserAccessTokenClaimsAdmin {
   username: string;
 
   @Expose()
-  roles: string[];
+  role: string;
 }
 
 export class AuthTokenOutput {
