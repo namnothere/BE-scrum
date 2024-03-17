@@ -16,7 +16,7 @@ export class ExpenseOutput {
 
   @Expose()
   @Type(() => Number)
-  money: number;
+  amount: number;
 
   @Expose()
   @Type(() => Number)

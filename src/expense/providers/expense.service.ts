@@ -1,13 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateExpenseInput } from '../dtos';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { User } from '../../user/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Expense } from '../entities';
-import { BaseApiResponse } from '../../shared/dtos';
+import { BaseApiResponse, BasePaginationResponse } from '../../shared/dtos';
 import { ExpenseOutput } from '../dtos';
 import { plainToClass } from 'class-transformer';
 import { MESSAGES, RESULT_STATUS } from '../../shared/constants';
+import { FilterExpense } from '../dtos/filter-expense.dto';
 
 @Injectable()
 export class ExpenseService {
@@ -17,6 +18,33 @@ export class ExpenseService {
     @InjectRepository(Expense)
     private readonly expenseRepo: Repository<Expense>,
   ) {}
+
+  async getExpenses(userId: string, input: FilterExpense): Promise<BasePaginationResponse<ExpenseOutput>> {
+
+    const where = {
+      user: {
+        id: userId,
+      },
+    };
+    if (input.category) {
+      where['category'] = ILike(`%${input.category}%`);
+    }
+
+    console.log(where);
+
+    const [expenses, count] = await this.expenseRepo.findAndCount({
+      where: where
+    });
+
+    const output = plainToClass(ExpenseOutput, expenses, {
+      excludeExtraneousValues: true,
+    });
+
+    return {
+      total: count,
+      listData: output,
+    }
+  }
 
   async create(userId: string, input: CreateExpenseInput): Promise<BaseApiResponse<ExpenseOutput>> {
     const user = await this.userRepo.findOne({
