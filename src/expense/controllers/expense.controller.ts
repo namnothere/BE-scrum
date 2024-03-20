@@ -1,14 +1,20 @@
-import { Controller, Post, Body, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Param, Delete, UseGuards, Get, Query } from '@nestjs/common';
 import { ExpenseService } from '../providers/expense.service';
 import { CreateExpenseInput } from '../dtos';
 import { ReqContext } from '../../shared/request-context/req-context.decorator';
 import { RequestContext } from '../../shared/request-context/request-context.dto';
 import { JwtAuthGuard } from '../../auth';
+import { FilterExpense } from '../dtos';
 
 @Controller('expense')
 @UseGuards(JwtAuthGuard)
 export class ExpenseController {
   constructor(private readonly expenseService: ExpenseService) {}
+
+  @Get('filter')
+  getExpenses(@ReqContext() ctx: RequestContext, @Query() input: FilterExpense) {
+    return this.expenseService.getExpenses(ctx.user.id, input);
+  }
 
   @Post()
   create(@ReqContext() ctx: RequestContext, @Body() createExpenseInput: CreateExpenseInput) {

@@ -17,6 +17,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('NotFoundUser');
     }
 
-    return { userId: user.id, username: user.username, role: user.role };
+    return { id: user.id, username: username, role: user.role };
   }
 }

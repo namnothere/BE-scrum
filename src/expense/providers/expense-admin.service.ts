@@ -78,7 +78,7 @@ export class ExpenseAdminService {
     };
   }
 
-  async rejectExpense(id: string) {
+  async rejectExpense(id: string, input: { note: string }) {
     const expense = await this.expenseRepo.findOne({
       where: {
         id,
@@ -92,6 +92,7 @@ export class ExpenseAdminService {
 
     await this.expenseRepo.update(id, {
       status: EXPENSE_STATUS.REJECTED,
+      note: input.note,
     });
 
     return {

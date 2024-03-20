@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Param, Post } from '@nestjs/common';
+import { Controller, UseGuards, Get, Param, Post, Body } from '@nestjs/common';
 import { ReqContext } from '../../shared/request-context/req-context.decorator';
 import { RequestContext } from '../../shared/request-context/request-context.dto';
 import { JwtAuthAdminGuard } from '../../auth';
@@ -26,7 +26,7 @@ export class ExpenseAdminController {
   }
 
   @Post('reject/:id')
-  rejectExpense(@Param('id') expenseId: string): Promise<BaseApiResponse<any>> {
-    return this.expenseAdminService.rejectExpense(expenseId);
+  rejectExpense(@Param('id') expenseId: string, @Body() input: { note: string }): Promise<BaseApiResponse<any>> {
+    return this.expenseAdminService.rejectExpense(expenseId, input);
   }
 }

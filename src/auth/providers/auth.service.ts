@@ -22,7 +22,6 @@ export class AuthService {
   ) {}
 
   public async validateUser(username: string, password: string): Promise<UserAccessTokenClaims> {
-    // const user = await this.user.fetch(username);
     const user = await this.userRepo.findOne({
       where: {
         username,
@@ -34,14 +33,14 @@ export class AuthService {
         message: MESSAGES.NOT_FOUND_USER,
       });
     }
-
+    
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
       throw new ForbiddenException({
         message: MESSAGES.LOGIN_INCORRECT,
       });
     }
-
+    
     return plainToClass(UserAccessTokenClaims, user, {
       excludeExtraneousValues: true,
     });
@@ -53,11 +52,11 @@ export class AuthService {
     }
 
     const payload = this.jwtService.decode<{ sub: string }>(refreshToken);
-    return payload.sub === data.userId;
+    return payload.sub === data.id;
   }
 
   public jwtSign(data: Payload): JwtSign {
-    const payload: JwtPayload = { sub: data.userId, username: data.username, role: data.role };
+    const payload: JwtPayload = { sub: data.id, username: data.username, role: data.role };
 
     return {
       access_token: this.jwtService.sign(payload),
@@ -72,7 +71,7 @@ export class AuthService {
         return null;
       }
 
-      return { userId: payload.sub, username: payload.username, role: payload.role };
+      return { id: payload.sub, username: payload.username, role: payload.role };
     } catch {
       // Unexpected token i in JSON at position XX
       return null;
