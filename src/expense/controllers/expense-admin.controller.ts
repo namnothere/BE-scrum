@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Patch, Body } from '@nestjs/common';
+import { Controller, UseGuards, Get, Param, Post } from '@nestjs/common';
 import { ReqContext } from '../../shared/request-context/req-context.decorator';
 import { RequestContext } from '../../shared/request-context/request-context.dto';
 import { JwtAuthAdminGuard } from '../../auth';
@@ -15,18 +15,18 @@ export class ExpenseAdminController {
     return 'admin endpoint' + ctx.user.id;
   }
 
-  @Get('all')
+  @Get('filter')
   getAllExpense(): Promise<BaseApiResponse<any>> {
     return this.expenseAdminService.getAllExpense();
   }
 
-  @Patch('approve')
-  approveExpense(@ReqContext() ctx: RequestContext, @Body() expenseId: string): Promise<BaseApiResponse<any>> {
+  @Post('approve/:id')
+  approveExpense(@ReqContext() ctx: RequestContext, @Param('id') expenseId: string): Promise<BaseApiResponse<any>> {
     return this.expenseAdminService.approveExpense(ctx.user.id, expenseId);
   }
 
-  @Patch('reject')
-  rejectExpense(@Body() expenseId: string): Promise<BaseApiResponse<any>> {
+  @Post('reject/:id')
+  rejectExpense(@Param('id') expenseId: string): Promise<BaseApiResponse<any>> {
     return this.expenseAdminService.rejectExpense(expenseId);
   }
 }

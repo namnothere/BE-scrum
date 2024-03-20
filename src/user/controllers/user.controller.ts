@@ -9,7 +9,6 @@ import { UserInfoUpdateInput } from '../dtos/user-infor-update-input.dto';
 @UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
-
   constructor(private readonly userService: UserService) {}
 
   @Get('getInfo')

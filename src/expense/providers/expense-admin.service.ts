@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { In, Not, Repository } from 'typeorm';
 import { User } from '../../user/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EXPENSE_STATUS, Expense } from '../entities';
 import { MESSAGES, RESULT_STATUS } from '../../shared/constants';
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { ExpenseOutput } from '../dtos';
 
 @Injectable()
@@ -14,11 +14,11 @@ export class ExpenseAdminService {
     private readonly userRepo: Repository<User>,
     @InjectRepository(Expense)
     private readonly expenseRepo: Repository<Expense>,
-  ) { }
+  ) {}
 
   async getAllExpense() {
     const expense = await this.expenseRepo.find();
-    const output = plainToClass(ExpenseOutput, expense, {
+    const output = plainToInstance(ExpenseOutput, expense, {
       excludeExtraneousValues: true,
     });
 
@@ -35,6 +35,7 @@ export class ExpenseAdminService {
     const expense = await this.expenseRepo.findOne({
       where: {
         id,
+        status: Not(In([EXPENSE_STATUS.APPROVED_BY_FD, EXPENSE_STATUS.REJECTED])),
       },
     });
 
@@ -52,16 +53,20 @@ export class ExpenseAdminService {
       throw new NotFoundException(MESSAGES.NOT_FOUND_USER);
     }
 
-    if (user.role == "MANAGER") {
+    if (user.role === 'MANAGER') {
+      if (expense.status != EXPENSE_STATUS.NEW_REQUEST) throw new BadRequestException(MESSAGES.NOT_NEW_REQUEST);
+
       await this.expenseRepo.update(id, {
-        status: EXPENSE_STATUS.APPROVED_BY_MANAGER
-      })
+        status: EXPENSE_STATUS.APPROVED_BY_MANAGER,
+      });
     }
 
-    if (user.role == "FD") {
+    if (user.role === 'FD') {
+      if (expense.status != EXPENSE_STATUS.APPROVED_BY_MANAGER) throw new BadRequestException(MESSAGES.NOT_YET_APPROVED_BY_MANAGER);
+
       await this.expenseRepo.update(id, {
-        status: EXPENSE_STATUS.APPROVED_BY_FD
-      })
+        status: EXPENSE_STATUS.APPROVED_BY_FD,
+      });
     }
 
     return {
@@ -77,6 +82,7 @@ export class ExpenseAdminService {
     const expense = await this.expenseRepo.findOne({
       where: {
         id,
+        status: Not(In([EXPENSE_STATUS.APPROVED_BY_FD, EXPENSE_STATUS.REJECTED])),
       },
     });
 
@@ -85,8 +91,8 @@ export class ExpenseAdminService {
     }
 
     await this.expenseRepo.update(id, {
-      status: EXPENSE_STATUS.REJECTED
-    })
+      status: EXPENSE_STATUS.REJECTED,
+    });
 
     return {
       status: RESULT_STATUS.SUCCEED,
