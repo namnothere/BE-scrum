@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../../user/entities';
 
 export enum EXPENSE_STATUS {
@@ -30,6 +30,12 @@ export class Expense {
 
   @Column({ name: 'note', nullable: true })
   note: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 
   constructor(partial: Partial<Expense>) {
     Object.assign(this, partial);
