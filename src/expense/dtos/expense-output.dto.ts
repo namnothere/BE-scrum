@@ -6,6 +6,7 @@ export class ExpenseOutput {
   id: number;
 
   @Expose()
+  @Type(() => UserInfoOutput)
   user: UserInfoOutput;
 
   @Expose()

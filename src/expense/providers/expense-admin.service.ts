@@ -6,6 +6,7 @@ import { EXPENSE_STATUS, Expense } from '../entities';
 import { MESSAGES, RESULT_STATUS } from '../../shared/constants';
 import { plainToInstance } from 'class-transformer';
 import { ExpenseOutput } from '../dtos';
+import { BasePaginationResponse } from '../../shared/dtos';
 
 @Injectable()
 export class ExpenseAdminService {
@@ -16,18 +17,19 @@ export class ExpenseAdminService {
     private readonly expenseRepo: Repository<Expense>,
   ) {}
 
-  async getAllExpense() {
-    const expense = await this.expenseRepo.find();
+  async getAllExpense(): Promise<BasePaginationResponse<ExpenseOutput>> {
+    const [expense, count] = await this.expenseRepo.findAndCount({
+      relations: {
+        user: true,
+      }
+    });
     const output = plainToInstance(ExpenseOutput, expense, {
       excludeExtraneousValues: true,
     });
 
     return {
-      status: RESULT_STATUS.SUCCEED,
-      error: false,
-      data: output,
-      code: 0,
-      message: MESSAGES.OK,
+      listData: output,
+      total: count
     };
   }
 

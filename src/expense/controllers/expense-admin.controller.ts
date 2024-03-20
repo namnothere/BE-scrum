@@ -2,8 +2,9 @@ import { Controller, UseGuards, Get, Param, Post, Body } from '@nestjs/common';
 import { ReqContext } from '../../shared/request-context/req-context.decorator';
 import { RequestContext } from '../../shared/request-context/request-context.dto';
 import { JwtAuthAdminGuard } from '../../auth';
-import { BaseApiResponse } from '../../shared/dtos';
+import { BaseApiResponse, BasePaginationResponse } from '../../shared/dtos';
 import { ExpenseAdminService } from '../providers';
+import { ExpenseOutput } from '../dtos';
 
 @Controller('admin/expense')
 @UseGuards(JwtAuthAdminGuard)
@@ -16,7 +17,7 @@ export class ExpenseAdminController {
   }
 
   @Get('filter')
-  getAllExpense(): Promise<BaseApiResponse<any>> {
+  getAllExpense(): Promise<BasePaginationResponse<ExpenseOutput>> {
     return this.expenseAdminService.getAllExpense();
   }
 
