@@ -20,7 +20,6 @@ export class ExpenseService {
   ) {}
 
   async getExpenses(userId: string, input: FilterExpense): Promise<BasePaginationResponse<ExpenseOutput>> {
-
     const where = {
       user: {
         id: userId,
@@ -31,7 +30,7 @@ export class ExpenseService {
     }
 
     const [expenses, count] = await this.expenseRepo.findAndCount({
-      where: where
+      where: where,
     });
 
     const output = plainToClass(ExpenseOutput, expenses, {
@@ -41,7 +40,7 @@ export class ExpenseService {
     return {
       total: count,
       listData: output,
-    }
+    };
   }
 
   async create(userId: string, input: CreateExpenseInput): Promise<BaseApiResponse<ExpenseOutput>> {

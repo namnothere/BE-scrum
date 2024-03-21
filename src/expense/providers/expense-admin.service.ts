@@ -21,7 +21,7 @@ export class ExpenseAdminService {
     const [expense, count] = await this.expenseRepo.findAndCount({
       relations: {
         user: true,
-      }
+      },
     });
     const output = plainToInstance(ExpenseOutput, expense, {
       excludeExtraneousValues: true,
@@ -29,7 +29,7 @@ export class ExpenseAdminService {
 
     return {
       listData: output,
-      total: count
+      total: count,
     };
   }
 

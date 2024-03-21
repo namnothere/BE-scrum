@@ -14,15 +14,15 @@ export class ExpenseOutput {
 
   @Expose()
   category: string;
-  
+
   @Expose()
   @Type(() => Number)
   amount: number;
-  
+
   @Expose()
   @Type(() => Number)
   status: number;
-  
+
   @Expose()
   note: string;
 

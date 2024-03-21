@@ -33,14 +33,14 @@ export class AuthService {
         message: MESSAGES.NOT_FOUND_USER,
       });
     }
-    
+
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
       throw new ForbiddenException({
         message: MESSAGES.LOGIN_INCORRECT,
       });
     }
-    
+
     return plainToClass(UserAccessTokenClaims, user, {
       excludeExtraneousValues: true,
     });
