@@ -35,6 +35,8 @@ export class ExpenseService {
 
     const [expenses, count] = await this.expenseRepo.findAndCount({
       where: where,
+      take: input.limit,
+      skip: input.offset,
     });
 
     const output = plainToClass(ExpenseOutput, expenses, {

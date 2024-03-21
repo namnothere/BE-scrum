@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../../user/entities';
+import { Expense } from '../../expense/entities';
 
-@Entity({ name: 'expense', schema: process.env.DB_SCHEMA })
+@Entity({ name: 'transaction', schema: process.env.DB_SCHEMA })
 export class Transaction {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -9,11 +10,11 @@ export class Transaction {
   @Column({ name: 'amount', default: 0 })
   amount: number;
 
-  @ManyToMany(() => User, (User) => User.transactionFrom)
+  @ManyToOne(() => User, (User) => User.transactions)
   from: User;
 
-  @ManyToOne(() => User, (User) => User.transactionTo)
-  to: User;
+  @OneToOne(() => Expense, (expense) => expense.transaction)
+  expense: Expense;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

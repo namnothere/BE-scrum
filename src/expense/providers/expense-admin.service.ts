@@ -7,6 +7,7 @@ import { MESSAGES, RESULT_STATUS } from '../../shared/constants';
 import { plainToInstance } from 'class-transformer';
 import { ExpenseOutput, FilterExpense } from '../dtos';
 import { BasePaginationResponse } from '../../shared/dtos';
+import { TransactionService } from '../../transaction/providers';
 
 @Injectable()
 export class ExpenseAdminService {
@@ -15,6 +16,7 @@ export class ExpenseAdminService {
     private readonly userRepo: Repository<User>,
     @InjectRepository(Expense)
     private readonly expenseRepo: Repository<Expense>,
+    private readonly transactionService: TransactionService,
   ) {}
 
   async getAllExpense(input: FilterExpense): Promise<BasePaginationResponse<ExpenseOutput>> {
@@ -31,11 +33,17 @@ export class ExpenseAdminService {
       where['description'] = ILike(`%${input.keyword}%`);
     }
 
+    if (typeof input.status == 'number') {
+      where['status'] = input.status;
+    }
+
     const [expense, count] = await this.expenseRepo.findAndCount({
       where: where,
       relations: {
         user: true,
       },
+      take: input.limit,
+      skip: input.offset,
     });
     const output = plainToInstance(ExpenseOutput, expense, {
       excludeExtraneousValues: true,
@@ -49,6 +57,7 @@ export class ExpenseAdminService {
 
   async approveExpense(userId: string, id: string) {
     const expense = await this.expenseRepo.findOne({
+      relations: ['user'],
       where: {
         id,
         status: Not(In([EXPENSE_STATUS.APPROVED_BY_FD, EXPENSE_STATUS.REJECTED])),
@@ -80,9 +89,16 @@ export class ExpenseAdminService {
     if (user.role === 'FD') {
       if (expense.status != EXPENSE_STATUS.APPROVED_BY_MANAGER) throw new BadRequestException(MESSAGES.NOT_YET_APPROVED_BY_MANAGER);
 
+      const transaction = await this.transactionService.createTransferMoney(user.id, {
+        expenseId: id,
+        amount: expense.amount,
+      });
+
       await this.expenseRepo.update(id, {
         status: EXPENSE_STATUS.APPROVED_BY_FD,
       });
+
+      if (!transaction) throw new BadRequestException(MESSAGES.CREATE_TRANSACTION_FAILED);
     }
 
     return {
