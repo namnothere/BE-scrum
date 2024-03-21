@@ -20,5 +20,8 @@ export class UserInfoOutput {
   balance: number;
 
   @Expose()
+  avatar_url: string;
+
+  @Expose()
   role: string;
 }

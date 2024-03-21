@@ -16,4 +16,9 @@ export class UserInfoUpdateInput {
   @IsString()
   @Transform(({ value }) => value || null)
   gender: number;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => value || null)
+  avatar_url: string;
 }

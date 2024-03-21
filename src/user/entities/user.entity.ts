@@ -44,6 +44,9 @@ export class User {
   @Column({ nullable: false, default: 0 })
   balance: number;
 
+  @Column({ nullable: true })
+  avatar_url: string;
+
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);
   }
