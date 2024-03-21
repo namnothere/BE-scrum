@@ -1,10 +1,10 @@
-import { Controller, UseGuards, Get, Param, Post, Body } from '@nestjs/common';
+import { Controller, UseGuards, Get, Param, Post, Body, Query } from '@nestjs/common';
 import { ReqContext } from '../../shared/request-context/req-context.decorator';
 import { RequestContext } from '../../shared/request-context/request-context.dto';
 import { JwtAuthAdminGuard } from '../../auth';
 import { BaseApiResponse, BasePaginationResponse } from '../../shared/dtos';
 import { ExpenseAdminService } from '../providers';
-import { ExpenseOutput } from '../dtos';
+import { ExpenseOutput, FilterExpense } from '../dtos';
 
 @Controller('admin/expense')
 @UseGuards(JwtAuthAdminGuard)
@@ -17,8 +17,8 @@ export class ExpenseAdminController {
   }
 
   @Get('filter')
-  getAllExpense(): Promise<BasePaginationResponse<ExpenseOutput>> {
-    return this.expenseAdminService.getAllExpense();
+  getAllExpense(@Query() input: FilterExpense): Promise<BasePaginationResponse<ExpenseOutput>> {
+    return this.expenseAdminService.getAllExpense(input);
   }
 
   @Post('approve/:id')

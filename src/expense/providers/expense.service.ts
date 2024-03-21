@@ -29,6 +29,10 @@ export class ExpenseService {
       where['category'] = ILike(`%${input.category}%`);
     }
 
+    if (input.keyword) {
+      where['description'] = ILike(`%${input.keyword}%`);
+    }
+
     const [expenses, count] = await this.expenseRepo.findAndCount({
       where: where,
     });

@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { In, Not, Repository } from 'typeorm';
+import { ILike, In, Not, Repository } from 'typeorm';
 import { User } from '../../user/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EXPENSE_STATUS, Expense } from '../entities';
 import { MESSAGES, RESULT_STATUS } from '../../shared/constants';
 import { plainToInstance } from 'class-transformer';
-import { ExpenseOutput } from '../dtos';
+import { ExpenseOutput, FilterExpense } from '../dtos';
 import { BasePaginationResponse } from '../../shared/dtos';
 
 @Injectable()
@@ -17,8 +17,22 @@ export class ExpenseAdminService {
     private readonly expenseRepo: Repository<Expense>,
   ) {}
 
-  async getAllExpense(): Promise<BasePaginationResponse<ExpenseOutput>> {
+  async getAllExpense(input: FilterExpense): Promise<BasePaginationResponse<ExpenseOutput>> {
+    const where = {};
+
+    if (input.category) {
+      where['category'] = ILike(`%${input.category}%`);
+    }
+
+    if (input.keyword) {
+      where['user'] = {
+        username: ILike(`%${input.keyword}%`),
+      };
+      where['description'] = ILike(`%${input.keyword}%`);
+    }
+
     const [expense, count] = await this.expenseRepo.findAndCount({
+      where: where,
       relations: {
         user: true,
       },
