@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 import { Expense } from '../../expense/entities';
+import { Transaction } from '../../transaction/entities';
 
 @Entity({ name: 'users', schema: process.env.DB_SCHEMA })
 export class User {
@@ -36,6 +37,12 @@ export class User {
 
   @OneToMany(() => Expense, (expense) => expense.user)
   expenses: Expense[];
+
+  @OneToMany(() => Transaction, (transaction) => transaction.from)
+  transactions: Transaction[];
+
+  @Column({ nullable: false, default: 0 })
+  balance: number;
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);

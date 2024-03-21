@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../../user/entities';
+import { Transaction } from '../../transaction/entities';
 
 export enum EXPENSE_STATUS {
   NEW_REQUEST = 0,
@@ -36,6 +37,10 @@ export class Expense {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @OneToOne(() => Transaction, (transaction) => transaction.expense)
+  @JoinColumn({ name: 'transaction_id' })
+  transaction: Transaction;
 
   constructor(partial: Partial<Expense>) {
     Object.assign(this, partial);

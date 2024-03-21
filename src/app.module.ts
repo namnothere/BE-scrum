@@ -11,6 +11,7 @@ import { CommonModule, ExceptionsFilter } from './common';
 import { configuration, loggerOptions } from './config';
 import { UserModule } from './user';
 import { ExpenseModule } from './expense';
+import { TransactionModule } from './transaction';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { ExpenseModule } from './expense';
     BaseModule,
     UserModule,
     ExpenseModule,
+    TransactionModule,
     // Module Router
     // https://docs.nestjs.com/recipes/router-module
     // RouterModule.register([

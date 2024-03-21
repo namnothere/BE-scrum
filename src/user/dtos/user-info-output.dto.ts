@@ -17,5 +17,8 @@ export class UserInfoOutput {
   gender: number;
 
   @Expose()
+  balance: number;
+
+  @Expose()
   role: string;
 }

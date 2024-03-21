@@ -19,4 +19,7 @@ export const MESSAGES = {
   NOT_NEW_REQUEST: 'not new request',
   NOT_YET_APPROVED_BY_MANAGER: 'not yet approved by manager',
   EXPENSE_ALREADY_APPROVED_BY_MANAGER: 'expense already approved by manager',
+
+  NOT_ENOUGH_BALANCE: 'not enough balance',
+  CREATE_TRANSACTION_FAILED: 'create transaction failed',
 };
