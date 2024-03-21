@@ -5,4 +5,8 @@ export class FilterExpense extends PaginationParamsDto {
   @IsOptional()
   @IsString()
   category: string;
+
+  @IsOptional()
+  @IsString()
+  keyword: string;
 }
